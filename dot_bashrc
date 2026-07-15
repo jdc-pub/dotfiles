@@ -3,7 +3,7 @@ export PATH="/Users/joey/.local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # User variables
-export EDITOR=nvim
+export EDITOR='zed --wait'
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # User aliases
@@ -40,3 +40,6 @@ fi
 if command -v "bat" >/dev/null; then
 	alias cat=bat
 fi
+
+# Setup BASH completions
+[[ -r "/opt/homebrew/etc/bash_completion.d/git-completion.bash" ]] && . "/opt/homebrew/etc/bash_completion.d/git-completion.bash"

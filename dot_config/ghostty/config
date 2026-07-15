@@ -1,8 +1,8 @@
 title = " " 
 font-family = "Fira Code"
 initial-window = false
-window-width = 120
-window-height = 32
+window-width = 41
+window-height = 100
 window-padding-x = 10
 window-padding-y = 10
 theme = dark:Catppuccin Macchiato,light:Catppuccin Latte

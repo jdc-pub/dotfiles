@@ -13,11 +13,18 @@
     "dark": "Catppuccin Frappé"
   },
   "agent": {
-    "default_profile": "ask",
-    "default_model": {
+    "inline_assistant_model": {
       "provider": "zed.dev",
       "model": "claude-sonnet-4"
+    },
+    "default_profile": "ask",
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "claude-3.5-sonnet"
     }
+  },
+  "edit_predictions": {
+    "mode": "subtle"
   },
   "disable_ai": false,
   "inlay_hints": {
@@ -62,6 +69,7 @@
   "theme": {
     "mode": "system",
     "light": "Catppuccin Latte",
-    "dark": "Catppuccin Macchiato"
-  }
+    "dark": "Catppuccin Frappé"
+  },
+  "autosave": "on_focus_change"
 }
