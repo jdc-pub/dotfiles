@@ -1,0 +1,4 @@
+#!/bin/sh
+# Manage dotfiles: a git repo in ~/.local/share/dot whose work tree is $HOME.
+# Usage: dot status | dot add -f ~/.bashrc | dot commit | dot push ...
+exec git --git-dir="$HOME/.local/share/dot" --work-tree="$HOME" "$@"
