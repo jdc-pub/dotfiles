@@ -1,0 +1,15 @@
+// Zed keymap
+//
+// Docs: https://zed.dev/docs/key-bindings
+// Defaults: run `zed: open default keymap` from the command palette.
+[
+  {
+    // ctrl-w closes the active pane item, everywhere. The extra contexts
+    // are needed because vim mode (window-command prefix) and the terminal
+    // (delete-word) would otherwise claim ctrl-w for themselves.
+    "context": "Workspace || Editor || Terminal || vim_mode == normal || vim_mode == visual || vim_mode == insert || vim_mode == replace",
+    "bindings": {
+      "ctrl-w": "pane::CloseActiveItem"
+    }
+  }
+]

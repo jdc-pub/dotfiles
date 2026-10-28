@@ -1,0 +1,34 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "diff_view_style": "unified",
+  "icon_theme": "Catppuccin Frappé",
+  "agent": {
+    "favorite_models": [],
+    "model_parameters": [],
+    "thinking_display": "always_collapsed"
+  },
+  "base_keymap": "Zed",
+  "agent_servers": {
+    "goose": {
+      "default_config_options": {
+        "model": "anthropic/claude-sonnet-5.5"
+      },
+      "type": "registry"
+    }
+  },
+  "vim_mode": true,
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "Catppuccin Frappé",
+  },
+}
