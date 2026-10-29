@@ -25,7 +25,7 @@ fi
 unset rc
 
 # User variables
-export EDITOR='zed --wait'
+export EDITOR='vi'
 
 # Cargo
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
