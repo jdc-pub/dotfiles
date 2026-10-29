@@ -42,3 +42,5 @@
         conflictstyle = zdiff3 
 [pull]
         rebase = true
+[include]
+	path = ~/.config/git/op-config
