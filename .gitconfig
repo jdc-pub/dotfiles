@@ -24,6 +24,7 @@
         default = current 
         autoSetupRemote = true
         followTags = true
+	gpgsign = if-asked
 [fetch]
         prune = true
         pruneTags = true
