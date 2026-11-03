@@ -23,6 +23,12 @@ Agent contributions are **never** `Co-authored-by`. When an agent contributed, a
 Assisted-by: <Titlecase harness>:<model-name>
 ```
 
+Prefer adding it with `git commit --trailer` over writing it into the message by hand:
+
+```sh
+git commit -m "<scope>: <description>" --trailer "Assisted-by: Goose:glm-5.3-flash"
+```
+
 ## Runtime attribution
 
 Use the `model` skill to find the harness and model of the session making this commit, and use the value it resolves as the `Assisted-by` value:
