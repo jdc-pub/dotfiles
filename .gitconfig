@@ -45,6 +45,6 @@
 [pull]
         rebase = true
 [include]
-	path = ~/.config/git/op-config
+	path = /Users/joey/.config/git/op-config
 [gpg]
 	format = ssh
