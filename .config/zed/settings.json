@@ -17,7 +17,11 @@
   },
   "cli_default_open_behavior": "existing_window",
   "diff_view_style": "unified",
-  "icon_theme": "Catppuccin Frappé",
+  "icon_theme": {
+    "mode": "system",
+    "light": "Catppuccin Frappé",
+    "dark": "Catppuccin Frappé"
+  },
   "agent": {
     "favorite_models": [],
     "model_parameters": [],
@@ -38,7 +42,7 @@
   "buffer_font_size": 15,
   "theme": {
     "mode": "system",
-    "light": "One Light",
+    "light": "Catppuccin Latte",
     "dark": "Catppuccin Frappé",
   },
 }
