@@ -32,7 +32,7 @@ Assisted-by: Goose:deepseek-v4.1-flash
 ```
 
 - If the user has already explicitly provided or confirmed both values in this conversation, use that confirmation instead.
-- Resolve it immediately before committing, because it describes the session that runs it. A subagent has its own session and its own model, so whoever writes the commit must be whoever resolves it.
+- Resolve it again for each new user message that asks for a commit, immediately before committing, because it describes the session that runs it and is invalidated by a new user message. A subagent has its own session and its own model, so whoever writes the commit must be whoever resolves it.
 - Never hand-write the value and never infer it from the agent's own answer, `GOOSE_MODEL`, `config.yaml`, `goose term info`, Zed, or `TERM_PROGRAM`.
 - When the `model` skill reports it unresolved, do not guess and do not substitute the configured default. Ask the user, and do not commit until they confirm:
 
