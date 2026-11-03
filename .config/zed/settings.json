@@ -7,6 +7,14 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "terminal": {
+    "font_size": 14.0
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+    "anthropic_retention": false
+  },
   "cli_default_open_behavior": "existing_window",
   "diff_view_style": "unified",
   "icon_theme": "Catppuccin Frappé",
