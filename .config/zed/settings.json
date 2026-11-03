@@ -27,7 +27,8 @@
   "agent_servers": {
     "goose": {
       "default_config_options": {
-        "model": "deepseek/deepseek-v4.1-flash"
+        "thinking_effort": "high",
+        "model": "z-ai/glm-5.3-flash"
       },
       "type": "registry"
     }
