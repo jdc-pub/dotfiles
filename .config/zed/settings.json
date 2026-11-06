@@ -12,6 +12,19 @@
   },
   "ui_font_family": "Hack Nerd Font",
   "buffer_font_family": "Hack Nerd Font",
+  "ssh_connections": [
+    {
+      "host": "tars",
+      "args": [],
+      "projects": [
+        {
+          "paths": [
+            "/var/home/joey/Workspace/github.com/git-ents/facet-git-tree"
+          ]
+        }
+      ]
+    }
+  ],
   "terminal": {
     "font_family": "Hack Nerd Font Mono",
     "font_size": 14.0
