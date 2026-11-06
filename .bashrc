@@ -73,6 +73,11 @@ esac
 # Tab completion for juliaup and julia channel selection
 [ -f "${HOME}/.julia/juliaup/completions/bash.sh" ] && source "${HOME}/.julia/juliaup/completions/bash.sh"
 
+# <<< juliaup initialize <<<
+
 # Added by flyctl installer
 export FLYCTL_INSTALL="/var/home/joey/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
+
+# Homebrew: exclude cargo packages from `brew bundle dump`
+export HOMEBREW_BUNDLE_DUMP_NO_CARGO=1
