@@ -27,15 +27,16 @@ You orchestrate; the subagent edits files, and you own git.
 - **The report is a claim; git is the evidence.** Accept on the diff you read,
   never on the summary you were handed.
 - **Every round ends in accept or revert**, and the tree never ends worse than you
-  found it. The only commit is the fold-back in step 4, and you never push.
+  found it. You commit each accepted round as a fixup and fold them in at the end,
+  and you never push.
 
 ## Run it
 
 **Fix the change set first.** `uncommitted` — the tree is dirty — is index plus
 worktree versus HEAD, untracked files included, `BASE=HEAD`, nothing to fold back.
-`commit <ref>` is that commit's own changes, `BASE=<ref>^`, folded back by amend.
-Default to `uncommitted` when the tree is dirty, else to `commit HEAD`. Refuse
-ranges, merges, and rebases.
+`commit <ref>` is that commit's own changes, `BASE=<ref>^`, fixed up as you accept
+rounds and folded back once at the end. Default to `uncommitted` when the tree is
+dirty, else to `commit HEAD`. Refuse ranges, merges, and rebases.
 
 **Find the one command that verifies the project** (AGENTS.md, Makefile, CI, package
 scripts, `cargo test`, a typecheck) and run it on the untouched change set. If it
@@ -47,11 +48,14 @@ one judgement.
 
 1. **Checkpoint** (see Git mechanics below). It is the undo point for the round.
 2. **Delegate one round.** `instructions` is the brief below with its placeholders
-   filled. `context` is BASE, the change-set paths, what the change set is for, the
-   verification command, and why previous rounds were rejected — a fresh subagent
-   has no memory and will otherwise re-propose exactly what you threw away. Give it
-   the `developer` extension and a small turn budget: it dies at five minutes with
-   **no output at all**, so the round must finish and report inside that.
+   filled. `context` is BASE, the change set's paths, what the change set is for,
+   the verification command, and why previous rounds were rejected — a fresh
+   subagent has no memory and will otherwise re-propose exactly what you threw
+   away. Nothing else: every round reviews the whole change set, so never hand it a
+   subset of the paths, a shortlist of files to "focus on", or the slop you already
+   suspect. Give it the `developer` extension and enough turns to read the whole
+   change set and run the verification — but it dies at five minutes with **no
+   output at all**, so the round has to finish and report inside that.
 3. **Judge it.** `RESULT: none` means it found nothing — stop. Otherwise compute the
    delta yourself and reject when: verification fails or regresses; behaviour, API,
    or output changed; a file outside the change set was touched; something on the
@@ -59,17 +63,20 @@ one judgement.
    typographic — blank lines, comments, one-lining, shortened names — rather than
    structural; or the round is larger than you can read in full, because a round you
    cannot read is a round you cannot judge. On reject, undo it and carry the reason
-   into the next round. On accept, leave the tree alone and log the round.
+   into the next round. On accept, leave the tree alone, log the round, and for
+   `commit <ref>` make it durable with a fixup commit (Git mechanics below).
 4. **Fold back and report.** Nothing to do for `uncommitted`. For `commit <ref>`,
-   stage the change-set paths and `git commit --amend --no-edit`, which keeps the
-   message and trailers — but if that commit is on a remote-tracking branch you are
-   rewriting published history, so ask the user first. If the change set reduced to
-   nothing, the commit was all slop: tell the user to drop it.
+   fold the accepted rounds into the change-set commit once, when the rounds stop.
+   Squashing a fixup keeps that commit's message and trailers, so the result is the
+   commit you started from plus the rounds you kept — but if it is on a
+   remote-tracking branch you are rewriting published history, so ask the user
+   first. If the change set reduced to nothing, the commit was all slop: tell the
+   user to drop it.
 
 Stop when a round finds nothing, when the budget runs out, or when two rounds in a
 row are rejected for the same reason. Rounds are sequential; each builds on the
-accepted state. Report net lines before and after, say which areas you never
-reached, and say plainly if the reduction was small.
+accepted state. Report net lines before and after, say which parts of the change set
+no round touched, and say plainly if the reduction was small.
 
 ## Git mechanics
 
@@ -103,11 +110,24 @@ git diff --no-renames -U0 "$SNAP" "$NOW" |
 git restore --source="$SNAP" --worktree -- .
 comm -13 <(git ls-tree -r --name-only "$SNAP" | sort -u) \
         <(git ls-files -c -o --exclude-standard | sort -u) | xargs -rd '\n' rm -f
+
+# accept, for `commit <ref>`: record the round as a fixup of the change-set commit.
+# One fixup per accepted round, so `git show <fixup>` is that round's diff on its
+# own and the accept is durable if the run stops early. BASE does not move:
+# `git diff <ref>^` still shows the whole change set, current round included.
+git add -A -- <change-set paths> && git commit --fixup=<ref>
+
+# fold the fixups in once, when the rounds stop: squashing keeps the original
+# message and trailers, so nothing is lost and nothing is pushed
+GIT_SEQUENCE_EDITOR=true git rebase -i --autosquash <ref>^
 ```
 
 `GIT_INDEX_FILE` keeps your real index — including anything half-staged — exactly as
-it was. Don't use `git stash push`, which mutates the tree, or temp commits, which
-move HEAD.
+it was. Don't use `git stash push`, which mutates the tree, or temp commits for the
+checkpoint: HEAD moves for an accepted round's fixup, and nowhere else. Stage the
+change set's paths in that fixup, never `.`, so the commit stays inside the change
+set; and if a commit hook rewrites a file, the fixup is refused — re-add, commit
+again, and count the rewrite as part of the round.
 
 ## The subagent brief
 
@@ -116,8 +136,11 @@ Remove slop from an existing change set. You delete what should not be there; yo
 do not restructure what should.
 
 The change set is the diff between {{BASE}} and the working tree — `git diff
-{{BASE}}`, plus the untracked files listed below. Read it before you touch
-anything. The files listed below are the only code you may edit.
+{{BASE}}`, plus the untracked files listed below. Read all of it, every round, as it
+stands now: the whole change set, including the files an earlier round already
+worked on, and including whatever those accepted rounds changed. The paths listed
+below are that whole change set, not a subset of it, and they are the only code you
+may edit.
 
 Delete:
 - narration: comments that restate the code, docstrings that echo the signature,
@@ -172,8 +195,8 @@ names are golf, not reduction.
 Shape of the round: the change set's net lines must end strictly lower, with
 additions well under half your deletions — line-neutral cleanup does not count, and
 a round that writes as much as it removes is a refactor. Make small, individually
-justified edits, stay near five files, and stop before your budget runs out so you
-can report. Run {{VERIFY}} before you report; if it fails and you cannot fix it,
+justified edits, anywhere in the change set, and stop before your budget runs out so
+you can report. Run {{VERIFY}} before you report; if it fails and you cannot fix it,
 revert that edit and say so.
 
 End your reply with exactly this and nothing after it:
