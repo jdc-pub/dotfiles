@@ -6,10 +6,7 @@ description: Remove slop from an existing change set — committed or uncommitte
 # reduce-code
 
 Remove slop from a change set. You delete what should not be there; you do not
-restructure what should. Whatever is left afterwards is the elegance, and a
-smaller diff is the evidence that you deleted rather than shuffled.
-
-You orchestrate; the subagent edits files, and you own git.
+restructure what should.
 
 ## Rules
 
@@ -49,29 +46,26 @@ one judgement.
 1. **Checkpoint** (see Git mechanics below). It is the undo point for the round.
 2. **Delegate one round.** `instructions` is the brief below with its placeholders
    filled. `context` is BASE, the change set's paths, what the change set is for,
-   the verification command, and why previous rounds were rejected — a fresh
-   subagent has no memory and will otherwise re-propose exactly what you threw
-   away. Nothing else: every round reviews the whole change set, so never hand it a
-   subset of the paths, a shortlist of files to "focus on", or the slop you already
-   suspect. Give it the `developer` extension and enough turns to read the whole
-   change set and run the verification — but it dies at five minutes with **no
-   output at all**, so the round has to finish and report inside that.
+   the verification command, and why previous rounds were rejected. Nothing else:
+   every round reviews the whole change set, so never hand it a subset of the paths,
+   a shortlist of files to "focus on", or the slop you already suspect. Give it the
+   `developer` extension and enough turns to read the whole change set and run the
+   verification — but it dies at five minutes with **no output at all**, so the
+   round has to finish and report inside that.
 3. **Judge it.** `RESULT: none` means it found nothing — stop. Otherwise compute the
    delta yourself and reject when: verification fails or regresses; behaviour, API,
    or output changed; a file outside the change set was touched; something on the
    brief's keep list was removed, or the tripwire fired; the reduction is
    typographic — blank lines, comments, one-lining, shortened names — rather than
-   structural; or the round is larger than you can read in full, because a round you
-   cannot read is a round you cannot judge. On reject, undo it and carry the reason
-   into the next round. On accept, leave the tree alone, log the round, and for
-   `commit <ref>` make it durable with a fixup commit (Git mechanics below).
+   structural; or the round is larger than you can read in full. On reject, undo it
+   and carry the reason into the next round. On accept, leave the tree alone, log
+   the round, and for `commit <ref>` make it durable with a fixup commit (Git
+   mechanics below).
 4. **Fold back and report.** Nothing to do for `uncommitted`. For `commit <ref>`,
    fold the accepted rounds into the change-set commit once, when the rounds stop.
-   Squashing a fixup keeps that commit's message and trailers, so the result is the
-   commit you started from plus the rounds you kept — but if it is on a
-   remote-tracking branch you are rewriting published history, so ask the user
-   first. If the change set reduced to nothing, the commit was all slop: tell the
-   user to drop it.
+   If it is on a remote-tracking branch you are rewriting published history, so ask
+   the user first. If the change set reduced to nothing, the commit was all slop:
+   tell the user to drop it.
 
 Stop when a round finds nothing, when the budget runs out, or when two rounds in a
 row are rejected for the same reason. Rounds are sequential; each builds on the
