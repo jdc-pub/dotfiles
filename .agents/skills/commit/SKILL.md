@@ -17,6 +17,8 @@ Use [Scoped Commits](https://scopedcommits.com):
 
 Use a specific subsystem as the scope and a concise, imperative description. Use a broader scope such as `treewide` when needed; special commits may use Git's normal format.
 
+Wrap prose at a reasonable maximum width of about 80 characters. Keep the subject on one line; break the body, trailers, and any other prose at word boundaries within that limit.
+
 Agent contributions are **never** `Co-authored-by`. When an agent contributed, add this trailer at the end:
 
 ```text
